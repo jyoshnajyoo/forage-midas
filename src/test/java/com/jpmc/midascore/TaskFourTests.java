@@ -1,5 +1,6 @@
 package com.jpmc.midascore;
 
+import com.jpmc.midascore.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,9 @@ public class TaskFourTests {
     private KafkaProducer kafkaProducer;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private UserPopulator userPopulator;
 
     @Autowired
@@ -30,14 +34,18 @@ public class TaskFourTests {
         for (String transactionLine : transactionLines) {
             kafkaProducer.send(transactionLine);
         }
-        Thread.sleep(2000);
+        Thread.sleep(5000); // wait 5 seconds for kafka to process
 
+        var wilburOpt = userRepository.findByName("Wilbur");
+        if (wilburOpt.isPresent()) {
+            double wilburBalance = wilburOpt.get().getBalance();
+            logger.info("WILBUR FINAL BALANCE: {}", wilburBalance);
+        } else {
+            logger.info("Wilbur not found. Try increasing Thread.sleep to 10000");
+        }
 
         logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("use your debugger to find out what wilbur's balance is after all transactions are processed");
-        logger.info("kill this test once you find the answer");
+        logger.info("use your debugger to find out what wilburs balance is after all transactions are processed");
         while (true) {
             Thread.sleep(20000);
             logger.info("...");

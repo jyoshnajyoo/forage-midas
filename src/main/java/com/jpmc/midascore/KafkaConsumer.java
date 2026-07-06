@@ -1,19 +1,26 @@
-package com.jpmc.midascore.component;
+package com.jpmc.midascore;
 
 import com.jpmc.midascore.foundation.Transaction;
 import com.jpmc.midascore.service.TransactionService;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DatabaseConduit {
+public class KafkaConsumer {
 
     private final TransactionService transactionService;
 
-    public DatabaseConduit(TransactionService transactionService) {
+    public KafkaConsumer(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
 
-    public void processTransaction(Transaction transaction) {
+    @KafkaListener(
+            topics = "${general.kafka-topic}",
+            groupId = "midas-group"
+    )
+    public void listen(Transaction transaction) {
+
         transactionService.processTransaction(transaction);
+
     }
 }

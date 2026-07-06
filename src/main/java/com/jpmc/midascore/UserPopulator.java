@@ -17,6 +17,8 @@ public class UserPopulator {
     @PostConstruct
     public void populate() {
 
+        System.out.println(">>> Populating users...");
+
         userRepository.deleteAll();
 
         userRepository.save(new UserRecord(1L, "wilbur", 1000f));
@@ -30,6 +32,6 @@ public class UserPopulator {
         userRepository.save(new UserRecord(9L, "sara", 1000f));
         userRepository.save(new UserRecord(10L, "tom", 1000f));
 
-        System.out.println(">>> USERS LOADED SUCCESSFULLY");
+        System.out.println(">>> Users inserted successfully.");
     }
 }
